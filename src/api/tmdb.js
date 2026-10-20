@@ -1,6 +1,6 @@
 // TMDB API helper. The v3 key is read from .env (never committed).
 const BASE = 'https://api.themoviedb.org/3';
-const KEY = import.meta.env.VITE_TMDB_API_KEY;
+const KEY = import.meta.env.VITE_TMDB_ACCESS;
 
 export const img = (path, size = 'w500') =>
   path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
