@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StarIcon from '@mui/icons-material/Star';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAddOutlined';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
@@ -14,7 +16,17 @@ export default function Details() {
   const navigate = useNavigate();
   const valid = type === 'movie' || type === 'tv';
   const { data: d, loading, error } = useFetch(valid ? `/${type}/${id}` : null);
+  const { data: videoData } = useFetch(valid ? `/${type}/${id}/videos` : null);
   const { has, toggle } = useWatchlist();
+  const [trailerOpen, setTrailerOpen] = useState(false);
+
+  const trailer = videoData?.results?.find((video) =>
+    video.site === 'YouTube' && video.type === 'Trailer' && video.official,
+  ) || videoData?.results?.find((video) =>
+    video.site === 'YouTube' && video.type === 'Trailer',
+  ) || videoData?.results?.find((video) =>
+    video.site === 'YouTube' && video.type === 'Teaser',
+  );
 
   if (!valid) return <Typography>Page not found.</Typography>;
 
@@ -59,10 +71,26 @@ export default function Details() {
                 onClick={() => toggle({ id: d.id, type, title, poster_path: d.poster_path, vote_average: d.vote_average, date })}>
                 {saved ? 'Remove from Watchlist' : 'Add to Watchlist'}
               </Button>
+              <Button variant="outlined" startIcon={<PlayArrowIcon />} disabled={!trailer}
+                onClick={() => setTrailerOpen(true)} sx={{ ml: 1 }}>
+                Play Trailer
+              </Button>
             </Box>
           </Box>
         )}
       </StateView>
+      <Dialog open={trailerOpen} onClose={() => setTrailerOpen(false)} maxWidth="md" fullWidth>
+        <DialogTitle>{title} - Trailer</DialogTitle>
+        <DialogContent>
+          {trailer && (
+            <Box sx={{ aspectRatio: '16 / 9', bgcolor: 'black' }}>
+              <Box component="iframe" src={`https://www.youtube-nocookie.com/embed/${trailer.key}?autoplay=1`}
+                title={`${title} trailer`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen sx={{ width: '100%', height: '100%', border: 0 }} />
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

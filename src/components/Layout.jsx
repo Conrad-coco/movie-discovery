@@ -62,7 +62,7 @@ export default function Layout() {
           )}
           <Typography component={Link} to="/" variant="h6" noWrap
             sx={{ color: 'primary.main', fontWeight: 800, textDecoration: 'none', mr: 2 }}>
-            🎬 CineScope
+            🎬 Now Showing
           </Typography>
           <Box component="form" onSubmit={submit}
             sx={{ display: 'flex', alignItems: 'center', bgcolor: 'action.hover', borderRadius: 5, px: 2, flexGrow: 1, maxWidth: 480, ml: 'auto' }}>

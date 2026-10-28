@@ -1,4 +1,4 @@
-# CineScope – Movie Discovery Web App
+# Now Showing – Movie Discovery Web App
 
 A MovieBox-inspired movie and TV discovery site built with **React (Vite)**, **Material UI** and **React Router**, using live data from the **TMDB API**.
 
